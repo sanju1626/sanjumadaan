@@ -1,0 +1,190 @@
+{
+  "scenario_id": "campus_lan",
+  "name": "Campus LAN Profile (Single-Site Enterprise)",
+  "description": "High-density multi-building campus network with 1,600+ user endpoints, PoE APs, dedicated server farm, and secure perimeter NAT router.",
+  "root_cidr": "10.10.0.0/16",
+  "site_count": 1,
+  "has_cloud_vpc": false,
+  "is_multi_as": false,
+  "latency_budget_ms": 2.0,
+  "security_policy": "WiFi traffic isolated from Server Farm (VLAN 100) and Management (VLAN 99) via Extended ACL; NAT overload on edge.",
+  "public_nat_ip": "203.0.113.2/30",
+  "devices": [
+    {
+      "name": "EDGE-R1",
+      "type": "router",
+      "model_pt": "2911",
+      "role": "Perimeter Router & NAT Gateway",
+      "site": "Campus HQ"
+    },
+    {
+      "name": "CORE-SW",
+      "type": "l3_switch",
+      "model_pt": "3650-24PS",
+      "role": "Collapsed Core & Distribution L3 Switch (STP Root)",
+      "site": "Campus HQ"
+    },
+    {
+      "name": "BLDG-A-SW",
+      "type": "l2_switch",
+      "model_pt": "2960-24TT",
+      "role": "Building A Access Switch",
+      "site": "Building A"
+    },
+    {
+      "name": "BLDG-B-SW",
+      "type": "l2_switch",
+      "model_pt": "2960-24TT",
+      "role": "Building B Access Switch",
+      "site": "Building B"
+    },
+    {
+      "name": "BLDG-C-SW",
+      "type": "l2_switch",
+      "model_pt": "2960-24TT",
+      "role": "Building C Access Switch",
+      "site": "Building C"
+    }
+  ],
+  "links": [
+    {
+      "link_id": "EDGE-CORE",
+      "endpoint_a": "EDGE-R1",
+      "endpoint_b": "CORE-SW",
+      "interface_a": "GigabitEthernet0/0",
+      "interface_b": "GigabitEthernet1/0/1",
+      "distance_m": 30.0,
+      "forced_media": null,
+      "description": "Perimeter Router to Core Switch Interconnect"
+    },
+    {
+      "link_id": "CORE-BLDG-A",
+      "endpoint_a": "CORE-SW",
+      "endpoint_b": "BLDG-A-SW",
+      "interface_a": "GigabitEthernet1/0/2",
+      "interface_b": "GigabitEthernet0/1",
+      "distance_m": 180.0,
+      "forced_media": null,
+      "description": "Campus Backbone to Building A Switch"
+    },
+    {
+      "link_id": "CORE-BLDG-B",
+      "endpoint_a": "CORE-SW",
+      "endpoint_b": "BLDG-B-SW",
+      "interface_a": "GigabitEthernet1/0/3",
+      "interface_b": "GigabitEthernet0/1",
+      "distance_m": 320.0,
+      "forced_media": null,
+      "description": "Campus Backbone to Building B Switch"
+    },
+    {
+      "link_id": "CORE-BLDG-C",
+      "endpoint_a": "CORE-SW",
+      "endpoint_b": "BLDG-C-SW",
+      "interface_a": "GigabitEthernet1/0/4",
+      "interface_b": "GigabitEthernet0/1",
+      "distance_m": 395.0,
+      "forced_media": null,
+      "description": "Campus Backbone to Building C Switch"
+    }
+  ],
+  "subnets": [
+    {
+      "name": "BLDG-A-Data",
+      "hosts": 300,
+      "vlan": 10,
+      "device": "CORE-SW",
+      "group": "Building A",
+      "description": "Building A Workstation Data"
+    },
+    {
+      "name": "BLDG-A-WiFi",
+      "hosts": 180,
+      "vlan": 12,
+      "device": "CORE-SW",
+      "group": "Building A",
+      "description": "Building A Wireless APs & Clients"
+    },
+    {
+      "name": "BLDG-A-Voice",
+      "hosts": 120,
+      "vlan": 11,
+      "device": "CORE-SW",
+      "group": "Building A",
+      "description": "Building A VoIP Telephony"
+    },
+    {
+      "name": "BLDG-B-Data",
+      "hosts": 300,
+      "vlan": 20,
+      "device": "CORE-SW",
+      "group": "Building B",
+      "description": "Building B Workstation Data"
+    },
+    {
+      "name": "BLDG-B-WiFi",
+      "hosts": 180,
+      "vlan": 22,
+      "device": "CORE-SW",
+      "group": "Building B",
+      "description": "Building B Wireless APs & Clients"
+    },
+    {
+      "name": "BLDG-B-Voice",
+      "hosts": 120,
+      "vlan": 21,
+      "device": "CORE-SW",
+      "group": "Building B",
+      "description": "Building B VoIP Telephony"
+    },
+    {
+      "name": "BLDG-C-Data",
+      "hosts": 200,
+      "vlan": 30,
+      "device": "CORE-SW",
+      "group": "Building C",
+      "description": "Building C Workstation Data"
+    },
+    {
+      "name": "BLDG-C-WiFi",
+      "hosts": 120,
+      "vlan": 32,
+      "device": "CORE-SW",
+      "group": "Building C",
+      "description": "Building C Wireless APs & Clients"
+    },
+    {
+      "name": "BLDG-C-Voice",
+      "hosts": 80,
+      "vlan": 31,
+      "device": "CORE-SW",
+      "group": "Building C",
+      "description": "Building C VoIP Telephony"
+    },
+    {
+      "name": "Servers-Farm",
+      "hosts": 60,
+      "vlan": 100,
+      "device": "CORE-SW",
+      "group": "HQ Data Center",
+      "description": "Internal Enterprise Applications & DB Servers"
+    },
+    {
+      "name": "HQ-Management",
+      "hosts": 40,
+      "vlan": 99,
+      "device": "CORE-SW",
+      "group": "HQ Data Center",
+      "description": "Infrastructure Out-of-Band Management"
+    },
+    {
+      "name": "P2P-EDGE-CORE",
+      "hosts": 2,
+      "vlan": null,
+      "device": "EDGE-R1",
+      "group": "Infrastructure P2P",
+      "is_p2p": true,
+      "description": "Routed /30 Uplink between EDGE-R1 and CORE-SW"
+    }
+  ]
+}

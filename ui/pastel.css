@@ -1,0 +1,150 @@
+/* NetArchitect Light Pastel Design System */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --na-bg: #FFF9FB;
+    --na-surface: #FFFFFF;
+    --na-sidebar: #F3ECFF;
+    --na-primary: #B79CED;
+    --na-primary-deep: #6C4FA8;
+    --na-text: #3B2F4A;
+    --na-text-muted: #5F5170;
+    --na-lavender: #E9E0FF;
+    --na-blush: #FFD9E6;
+    --na-mint: #DDF6EC;
+    --na-peach: #FFE6DA;
+    --na-butter: #FFF4C9;
+    --na-border: #E8DFFF;
+    --na-shadow: 0 8px 24px rgba(59, 47, 74, 0.06);
+}
+
+html, body, [data-testid="stAppViewContainer"] {
+    background-color: var(--na-bg);
+    color: var(--na-text);
+    font-family: 'DM Sans', 'Segoe UI', -apple-system, sans-serif;
+}
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #F6F0FF 0%, #FFF2F7 100%);
+    border-right: 1px solid var(--na-border);
+}
+
+h1, h2, h3, .na-heading {
+    font-family: 'Fraunces', Georgia, serif !important;
+    color: var(--na-text) !important;
+    letter-spacing: -0.015em;
+}
+
+code, pre, [data-testid="stCode"] {
+    font-family: 'JetBrains Mono', 'Consolas', monospace !important;
+}
+
+/* Pastel Hero Banner */
+.na-hero {
+    background: linear-gradient(135deg, #E9E0FF 0%, #FFD9E6 52%, #FFE6DA 100%);
+    border: 1px solid rgba(183, 156, 237, 0.45);
+    border-radius: 20px;
+    padding: 1.4rem 1.8rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--na-shadow);
+    color: var(--na-text);
+}
+
+.na-hero h1 {
+    margin: 0 0 0.3rem 0 !important;
+    font-size: 1.85rem !important;
+    color: #2B1F3A !important;
+}
+
+.na-hero p {
+    margin: 0;
+    color: #453759;
+    font-size: 0.98rem;
+    line-height: 1.45;
+}
+
+/* Rounded 20px Pastel Cards */
+.na-card {
+    background: var(--na-surface);
+    border: 1px solid var(--na-border);
+    border-radius: 20px;
+    padding: 1.15rem 1.35rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--na-shadow);
+    color: var(--na-text);
+}
+
+.na-card-lavender { background: #F8F5FF; border-color: #DFD2FF; }
+.na-card-mint     { background: #F1FBF7; border-color: #BEEBD7; }
+.na-card-blush    { background: #FFF2F7; border-color: #FACADD; }
+.na-card-peach    { background: #FFF5EF; border-color: #FAD3BF; }
+.na-card-butter   { background: #FFFBEA; border-color: #F4E3A1; }
+
+/* Metric Card Styling */
+.na-metric {
+    background: var(--na-surface);
+    border: 1px solid var(--na-border);
+    border-radius: 20px;
+    padding: 0.95rem 1.15rem;
+    box-shadow: var(--na-shadow);
+    margin-bottom: 0.65rem;
+}
+.na-metric-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--na-text-muted);
+    margin-bottom: 0.25rem;
+}
+.na-metric-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #2B1F3A;
+    line-height: 1.2;
+}
+.na-metric-sub {
+    font-size: 0.8rem;
+    color: var(--na-text-muted);
+    margin-top: 0.2rem;
+}
+
+/* Badges / Pills */
+.na-pill {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #2B1F3A;
+    margin-right: 0.35rem;
+    margin-bottom: 0.25rem;
+    border: 1px solid rgba(59, 47, 74, 0.1);
+}
+.na-pill-lavender { background: #E9E0FF; }
+.na-pill-mint     { background: #DDF6EC; }
+.na-pill-blush    { background: #FFD9E6; }
+.na-pill-peach    { background: #FFE6DA; }
+.na-pill-butter   { background: #FFF4C9; }
+
+/* Streamlit Containers & Buttons Polish */
+div.stButton > button, div.stDownloadButton > button {
+    border-radius: 14px !important;
+    border: 1px solid #CDB7F6 !important;
+    font-weight: 600 !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+div.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #B79CED 0%, #9E7EE4 100%) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+}
+
+div[data-testid="stExpander"] {
+    border-radius: 16px !important;
+    border: 1px solid var(--na-border) !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(59, 47, 74, 0.04);
+}

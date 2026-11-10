@@ -1,0 +1,164 @@
+{
+  "scenario_id": "metro_man",
+  "name": "Metro MAN Profile (Tri-Site Metropolitan Ring)",
+  "description": "Multi-site metropolitan ring with HQ and two remote branches, EVPL Carrier Ethernet links, MQC Expedited Forwarding (EF) low-latency queuing, and sub-5ms failover budget.",
+  "root_cidr": "172.16.0.0/16",
+  "site_count": 3,
+  "has_cloud_vpc": false,
+  "is_multi_as": false,
+  "latency_budget_ms": 5.0,
+  "qos_policy": "MQC Low-Latency Queuing (LLQ) prioritizing FinTech Co-Lo and Voice with DSCP EF (Expedited Forwarding).",
+  "sites": [
+    {
+      "name": "HQ-Campus",
+      "is_dual_homed": true,
+      "devices": ["HQ-CORE"]
+    },
+    {
+      "name": "Remote-Branch-1",
+      "is_dual_homed": true,
+      "devices": ["REM1-R"]
+    },
+    {
+      "name": "Remote-Branch-2",
+      "is_dual_homed": true,
+      "devices": ["REM2-R"]
+    }
+  ],
+  "devices": [
+    {
+      "name": "HQ-CORE",
+      "type": "l3_switch",
+      "model_pt": "3650-24PS",
+      "role": "Headquarters Core Routing Switch (ABR Area 0)",
+      "site": "HQ-Campus"
+    },
+    {
+      "name": "REM1-R",
+      "type": "router",
+      "model_pt": "2911",
+      "role": "Remote Branch 1 Edge Router",
+      "site": "Remote-Branch-1"
+    },
+    {
+      "name": "REM2-R",
+      "type": "router",
+      "model_pt": "2911",
+      "role": "Remote Branch 2 Edge Router",
+      "site": "Remote-Branch-2"
+    }
+  ],
+  "links": [
+    {
+      "link_id": "HQ-REM1",
+      "endpoint_a": "HQ-CORE",
+      "endpoint_b": "REM1-R",
+      "interface_a": "GigabitEthernet1/0/1",
+      "interface_b": "GigabitEthernet0/0",
+      "distance_m": 15000.0,
+      "forced_media": null,
+      "ospf_cost": 10,
+      "description": "Metro EVPL Primary Fiber Span HQ to Branch 1"
+    },
+    {
+      "link_id": "HQ-REM2",
+      "endpoint_a": "HQ-CORE",
+      "endpoint_b": "REM2-R",
+      "interface_a": "GigabitEthernet1/0/2",
+      "interface_b": "GigabitEthernet0/0",
+      "distance_m": 35000.0,
+      "forced_media": null,
+      "ospf_cost": 20,
+      "description": "Metro EVPL Primary Fiber Span HQ to Branch 2"
+    },
+    {
+      "link_id": "REM1-REM2",
+      "endpoint_a": "REM1-R",
+      "endpoint_b": "REM2-R",
+      "interface_a": "GigabitEthernet0/1",
+      "interface_b": "GigabitEthernet0/1",
+      "distance_m": 22000.0,
+      "forced_media": null,
+      "ospf_cost": 100,
+      "description": "Metro EVPL Ring Closure Inter-Branch Backup Link"
+    }
+  ],
+  "subnets": [
+    {
+      "name": "HQ-Users",
+      "hosts": 300,
+      "vlan": 10,
+      "device": "HQ-CORE",
+      "group": "HQ-Campus",
+      "description": "HQ Campus User Workstations"
+    },
+    {
+      "name": "REM1-Users",
+      "hosts": 80,
+      "vlan": 20,
+      "device": "REM1-R",
+      "group": "Remote-Branch-1",
+      "description": "Branch 1 Office Staff"
+    },
+    {
+      "name": "REM2-Users",
+      "hosts": 70,
+      "vlan": 30,
+      "device": "REM2-R",
+      "group": "Remote-Branch-2",
+      "description": "Branch 2 Office Staff"
+    },
+    {
+      "name": "HQ-Servers",
+      "hosts": 60,
+      "vlan": 100,
+      "device": "HQ-CORE",
+      "group": "HQ-Campus",
+      "description": "Enterprise Production Application Cluster"
+    },
+    {
+      "name": "FinTech-Colo",
+      "hosts": 60,
+      "vlan": 150,
+      "device": "HQ-CORE",
+      "group": "HQ-Campus",
+      "is_priority_queue": true,
+      "description": "Ultra-Low Latency Algorithmic Trading Server Subnet"
+    },
+    {
+      "name": "HQ-Mgmt",
+      "hosts": 20,
+      "vlan": 99,
+      "device": "HQ-CORE",
+      "group": "HQ-Campus",
+      "description": "Metro Infrastructure OOB Management"
+    },
+    {
+      "name": "P2P-HQ-REM1",
+      "hosts": 2,
+      "vlan": null,
+      "device": "HQ-CORE",
+      "group": "Metro P2P Spans",
+      "is_p2p": true,
+      "description": "Routed /30 Span HQ to REM1"
+    },
+    {
+      "name": "P2P-HQ-REM2",
+      "hosts": 2,
+      "vlan": null,
+      "device": "HQ-CORE",
+      "group": "Metro P2P Spans",
+      "is_p2p": true,
+      "description": "Routed /30 Span HQ to REM2"
+    },
+    {
+      "name": "P2P-REM1-REM2",
+      "hosts": 2,
+      "vlan": null,
+      "device": "REM1-R",
+      "group": "Metro P2P Spans",
+      "is_p2p": true,
+      "description": "Routed /30 Ring Closure REM1 to REM2"
+    }
+  ]
+}

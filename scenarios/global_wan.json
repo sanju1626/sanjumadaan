@@ -1,0 +1,285 @@
+{
+  "scenario_id": "global_wan",
+  "name": "Global WAN Profile (Multi-City Carrier Backbone & Cloud VPC)",
+  "description": "Nationwide enterprise backbone interconnecting 4 major metropolitan nodes and public cloud VPC edge over DWDM/Carrier transport, Multi-Area OSPF with ABR summaries, and eBGP route isolation.",
+  "root_cidr": "10.0.0.0/16",
+  "site_count": 5,
+  "has_cloud_vpc": true,
+  "is_multi_as": true,
+  "latency_budget_ms": 30.0,
+  "security_policy": "Point-to-point GRE tunnels over WAN links with optional IPsec crypto profile; eBGP route filtering and prefix limits.",
+  "bgp_peering": {
+    "enterprise_asn": 65001,
+    "cloud_asn": 65010,
+    "peer_link": "DEL-CLOUD"
+  },
+  "sites": [
+    {
+      "name": "Delhi-HQ",
+      "is_dual_homed": true,
+      "devices": ["R-DEL"]
+    },
+    {
+      "name": "Mumbai-Node",
+      "is_dual_homed": true,
+      "devices": ["R-MUM"]
+    },
+    {
+      "name": "Bangalore-Node",
+      "is_dual_homed": true,
+      "devices": ["R-BLR"]
+    },
+    {
+      "name": "Chennai-Node",
+      "is_dual_homed": true,
+      "devices": ["R-CHE"]
+    },
+    {
+      "name": "Cloud-VPC-Region",
+      "is_dual_homed": false,
+      "devices": ["CLOUD-EDGE"]
+    }
+  ],
+  "devices": [
+    {
+      "name": "R-DEL",
+      "type": "router",
+      "model_pt": "2911",
+      "role": "Delhi Hub Router & OSPF Backbone Area 0 / ABR / BGP Speaker",
+      "site": "Delhi-HQ",
+      "ospf_area": 0
+    },
+    {
+      "name": "R-MUM",
+      "type": "router",
+      "model_pt": "2911",
+      "role": "Mumbai Regional Router (OSPF Area 1)",
+      "site": "Mumbai-Node",
+      "ospf_area": 1
+    },
+    {
+      "name": "R-BLR",
+      "type": "router",
+      "model_pt": "2911",
+      "role": "Bangalore Tech Hub Router (OSPF Area 2)",
+      "site": "Bangalore-Node",
+      "ospf_area": 2
+    },
+    {
+      "name": "R-CHE",
+      "type": "router",
+      "model_pt": "2911",
+      "role": "Chennai Maritime Node Router (OSPF Area 3)",
+      "site": "Chennai-Node",
+      "ospf_area": 3
+    },
+    {
+      "name": "CLOUD-EDGE",
+      "type": "cloud",
+      "model_pt": "ISR4331",
+      "role": "Cloud Provider Customer Gateway (VPC Edge)",
+      "site": "Cloud-VPC-Region",
+      "bgp": {
+        "remote_asn": 65010
+      }
+    }
+  ],
+  "links": [
+    {
+      "link_id": "DEL-MUM",
+      "endpoint_a": "R-DEL",
+      "endpoint_b": "R-MUM",
+      "interface_a": "GigabitEthernet0/0",
+      "interface_b": "GigabitEthernet0/0",
+      "distance_m": 1150000.0,
+      "forced_media": null,
+      "description": "Carrier DWDM Long-Haul Span Delhi to Mumbai"
+    },
+    {
+      "link_id": "DEL-BLR",
+      "endpoint_a": "R-DEL",
+      "endpoint_b": "R-BLR",
+      "interface_a": "GigabitEthernet0/1",
+      "interface_b": "GigabitEthernet0/0",
+      "distance_m": 1740000.0,
+      "forced_media": null,
+      "description": "Carrier DWDM Long-Haul Span Delhi to Bangalore"
+    },
+    {
+      "link_id": "MUM-BLR",
+      "endpoint_a": "R-MUM",
+      "endpoint_b": "R-BLR",
+      "interface_a": "GigabitEthernet0/1",
+      "interface_b": "GigabitEthernet0/1",
+      "distance_m": 840000.0,
+      "forced_media": null,
+      "description": "Carrier DWDM Regional Link Mumbai to Bangalore"
+    },
+    {
+      "link_id": "BLR-CHE",
+      "endpoint_a": "R-BLR",
+      "endpoint_b": "R-CHE",
+      "interface_a": "GigabitEthernet0/2",
+      "interface_b": "GigabitEthernet0/0",
+      "distance_m": 290000.0,
+      "forced_media": null,
+      "description": "Carrier DWDM Regional Link Bangalore to Chennai"
+    },
+    {
+      "link_id": "DEL-CHE",
+      "endpoint_a": "R-DEL",
+      "endpoint_b": "R-CHE",
+      "interface_a": "GigabitEthernet0/2",
+      "interface_b": "GigabitEthernet0/1",
+      "distance_m": 1760000.0,
+      "forced_media": null,
+      "description": "Carrier DWDM Long-Haul Span Delhi to Chennai"
+    },
+    {
+      "link_id": "DEL-CLOUD",
+      "endpoint_a": "R-DEL",
+      "endpoint_b": "CLOUD-EDGE",
+      "interface_a": "GigabitEthernet0/3",
+      "interface_b": "GigabitEthernet0/0",
+      "distance_m": 30000.0,
+      "forced_media": null,
+      "description": "Cloud Direct-Connect / ExpressRoute Metro Cross-Connect"
+    }
+  ],
+  "subnets": [
+    {
+      "name": "DEL-IoT",
+      "hosts": 300,
+      "vlan": 10,
+      "device": "R-DEL",
+      "group": "Area 0 (Delhi)",
+      "description": "Delhi Logistics IoT Sensors"
+    },
+    {
+      "name": "DEL-Scanners",
+      "hosts": 200,
+      "vlan": 11,
+      "device": "R-DEL",
+      "group": "Area 0 (Delhi)",
+      "description": "Delhi High-Speed Barcode Scanners"
+    },
+    {
+      "name": "DEL-Corp",
+      "hosts": 100,
+      "vlan": 12,
+      "device": "R-DEL",
+      "group": "Area 0 (Delhi)",
+      "description": "Delhi Executive & Corporate Users"
+    },
+    {
+      "name": "MUM-IoT",
+      "hosts": 300,
+      "vlan": 20,
+      "device": "R-MUM",
+      "group": "Area 1 (Mumbai)",
+      "description": "Mumbai Port Terminal IoT Sensors"
+    },
+    {
+      "name": "MUM-Scanners",
+      "hosts": 200,
+      "vlan": 21,
+      "device": "R-MUM",
+      "group": "Area 1 (Mumbai)",
+      "description": "Mumbai Warehouse Container Scanners"
+    },
+    {
+      "name": "BLR-IoT",
+      "hosts": 300,
+      "vlan": 30,
+      "device": "R-BLR",
+      "group": "Area 2 (Bangalore)",
+      "description": "Bangalore Campus Facility IoT"
+    },
+    {
+      "name": "BLR-Scanners",
+      "hosts": 200,
+      "vlan": 31,
+      "device": "R-BLR",
+      "group": "Area 2 (Bangalore)",
+      "description": "Bangalore Hardware QA Scanners"
+    },
+    {
+      "name": "CHE-IoT",
+      "hosts": 300,
+      "vlan": 40,
+      "device": "R-CHE",
+      "group": "Area 3 (Chennai)",
+      "description": "Chennai Dock Terminal IoT"
+    },
+    {
+      "name": "CHE-Scanners",
+      "hosts": 200,
+      "vlan": 41,
+      "device": "R-CHE",
+      "group": "Area 3 (Chennai)",
+      "description": "Chennai Freight Scanners"
+    },
+    {
+      "name": "Cloud-VPC-Subnet",
+      "hosts": 250,
+      "vlan": null,
+      "device": "CLOUD-EDGE",
+      "group": "Cloud VPC",
+      "description": "Cloud Workload Subnet (VPC Private Subnet)"
+    },
+    {
+      "name": "P2P-DEL-MUM",
+      "hosts": 2,
+      "vlan": null,
+      "device": "R-DEL",
+      "group": "WAN P2P Links",
+      "is_p2p": true,
+      "description": "Routed /30 WAN link Delhi to Mumbai"
+    },
+    {
+      "name": "P2P-DEL-BLR",
+      "hosts": 2,
+      "vlan": null,
+      "device": "R-DEL",
+      "group": "WAN P2P Links",
+      "is_p2p": true,
+      "description": "Routed /30 WAN link Delhi to Bangalore"
+    },
+    {
+      "name": "P2P-MUM-BLR",
+      "hosts": 2,
+      "vlan": null,
+      "device": "R-MUM",
+      "group": "WAN P2P Links",
+      "is_p2p": true,
+      "description": "Routed /30 WAN link Mumbai to Bangalore"
+    },
+    {
+      "name": "P2P-BLR-CHE",
+      "hosts": 2,
+      "vlan": null,
+      "device": "R-BLR",
+      "group": "WAN P2P Links",
+      "is_p2p": true,
+      "description": "Routed /30 WAN link Bangalore to Chennai"
+    },
+    {
+      "name": "P2P-DEL-CHE",
+      "hosts": 2,
+      "vlan": null,
+      "device": "R-DEL",
+      "group": "WAN P2P Links",
+      "is_p2p": true,
+      "description": "Routed /30 WAN link Delhi to Chennai"
+    },
+    {
+      "name": "P2P-DEL-CLOUD",
+      "hosts": 2,
+      "vlan": null,
+      "device": "R-DEL",
+      "group": "Cloud Interconnect",
+      "is_p2p": true,
+      "description": "Routed /30 eBGP Peering Link Delhi to Cloud VPC"
+    }
+  ]
+}
