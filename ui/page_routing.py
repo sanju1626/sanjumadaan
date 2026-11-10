@@ -55,7 +55,7 @@ def render_routing_topology(pipeline_result: dict) -> None:
     # Interactive Topology Graph
     st.markdown("### Interactive Network Topology (Links Colored by Physical Medium)")
     G = build_topology_graph(scen["devices"], scen["links"])
-    pos = nx.kamada_kawai_layout(G) if len(G.nodes) >= 3 else nx.spring_layout(G, seed=42)
+    pos = nx.spring_layout(G, seed=42, k=1.4, iterations=120)
 
     fig = go.Figure()
     legend_seen = set()

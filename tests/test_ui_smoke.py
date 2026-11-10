@@ -57,3 +57,16 @@ def test_streamlit_preset_switching_and_custom_fault_buttons():
     opt_btn = next(b for b in at.button if "Optical Budget" in b.label)
     opt_btn.click().run()
     assert not at.exception
+
+
+def test_streamlit_routing_page_works_without_scipy(monkeypatch):
+    """Ensure Streamlit Cloud environments without optional scipy render Routing & Architecture cleanly."""
+    import sys
+
+    monkeypatch.setitem(sys.modules, "scipy", None)
+    at = AppTest.from_file(APP_PATH, default_timeout=25)
+    at.run()
+    for preset in list(at.sidebar.selectbox[0].options):
+        at.sidebar.selectbox[0].set_value(preset).run()
+        at.sidebar.radio[0].set_value("Routing & Architecture").run()
+        assert not at.exception, f"Routing & Architecture failed without scipy for '{preset}': {at.exception}"
